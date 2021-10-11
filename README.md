@@ -9,7 +9,7 @@ Se implementa un motor de plantillas con Express, en este caso EJS, se instala m
 
 ## Creación de la Base de Datos
 
-Ya instalado MySQL en nuestro equipo local tecleamos ***mysql --host 127.0.0.1 -P 3307 -u root -p*** 
+En ésta versión se tiene la BD dentro de un contenedor de Docker de acuerdo a las instrucciones -----> Para el Docker
 
 Para ver las BD creadas
 
