@@ -1,0 +1,2 @@
+create table Alcaldias(NombreAlcaldia VARCHAR(50), CP_Inicial bigint, CP_Final bigint);
+create table PruebaDatosMetrobus(_id INT NOT NULL, id INT NOT NULL, vehicle_id int not null, vehicle_label int not null, vehicle_current_status int not null, position_latitude bigint not null, position_longitude bigint not null, geographic_point nvarchar(100) not null, position_speed int not null, position_odometer int not null, trip_schedule_relationship int not null, trip_id int, trip_start_date int, trip_route_id int);
