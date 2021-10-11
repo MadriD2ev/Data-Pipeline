@@ -1,0 +1,25 @@
+<%- include("template/cabecera", {titulo: "Alcaldías"}) %>
+    
+<div class="mt-3 d-flex justify-content-center">
+  <h1>Alcaldías disponibles</h1>
+</div>
+<div class="mt-5 mx-auto" style="width: 600px;">
+    <table class="table" style="text-align:center">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Alcaldía</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i < todasAlcaldias.length; i++) { %>
+            <tr>
+                <td><%= i+1 %></td>
+                <td><%= todasAlcaldias[i].nombreAlcaldia %></td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+
+<%- include("template/footer")%>
