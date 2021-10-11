@@ -1,0 +1,37 @@
+#Se compone de distintas imagenes o contenedores para las conexiones o aplicaciones que se requieren para que funcione el proyecto
+version: "3"
+
+#Servicios a utilizar, imagenes o contenedores
+services:
+  #es para el servidor de node
+  web:
+    container_name: nodeapp
+    #Si se cae que se reinicie siempre
+    restart: always
+    #Se crea a partir de la raíz (.)
+    build: .
+    #Escucha en el 3000 dentro del contenedor pero ahora ocupará el 5000
+    ports:
+      - "5000:3000" 
+    #web va a estar enlazado con basedatos
+    links:
+      - basedatos
+    #permite la actualización de lo que se cree en el proyecto hacia el contenedor y viceversa
+    volumes:
+      - .:/usr/src/app
+  basedatos:
+    container_name: basedatoscdmx
+    image: mariadb/server
+    #Si se cae que se reinicie siempre
+    restart: always
+    environment: 
+      MARIADB_USER: root
+      MARIADB_PASSWORD: madridbd
+      MARIADB_DATABASE: metrobus_cdmx
+      MARIADB_ROOT_HOST: 127.0.0.1
+    volumes:
+      - .:/init.sql
+    ports:
+      - "3307:3306"
+    logging:
+        driver: none
