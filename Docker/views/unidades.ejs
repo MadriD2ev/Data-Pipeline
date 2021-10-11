@@ -27,6 +27,7 @@
 
 //Obtener el valor del input que nos indicará el número de páginas a crear
 const totalRegistros = document.getElementById("getRegistros").value
+
 let pags = 0;
 let proxPag = 1;
 let rowCount= -1;
@@ -34,8 +35,11 @@ let rowCount= -1;
 const cargarRegistros = async(prev,next, flag) => {
 
   if(flag == 1){
-    let nuevoP = next * prev //18 * 2 = 36 Último número de idRegistro a pintar del nuevo rango
-    let nuevoN; //Primer número de idRegistro a pintar del nuevo rango
+
+    //18 * 2 = 36 Último número de idRegistro a pintar del nuevo rango
+    let nuevoP = next * prev 
+    //Primer número de idRegistro a pintar del nuevo rango
+    let nuevoN; 
     
     if(prev>1){
       nuevoN = nuevoP - 18
@@ -109,7 +113,9 @@ const cargarRegistros = async(prev,next, flag) => {
   }
 }
 
-
+/*
+  Función que crea el paginado 
+*/
 if(totalRegistros > 0){
 
   //Total de páginas de acuerdo a los registros recibidos
@@ -127,14 +133,14 @@ if(totalRegistros > 0){
 
 }
 
-//Función que se ejecuta al darle clic a Siguiente
+//Función que se ejecuta al darle clic a SIGUIENTE
 const nextPag = () => {
 
   //Si existe el alert lo eliminará
   eliminarAlert()
 
   if(proxPag<pags){
-
+    
     proxPag = proxPag + 1
 
     //ejecuta el paginado
@@ -149,6 +155,7 @@ const nextPag = () => {
 
 }
 
+//Función que se ejecuta al darle clic a ANTERIOR
 const prevPag = () => {
 
   //Si existe el alert lo eliminará
@@ -176,6 +183,9 @@ const prevPag = () => {
 
 }
 
+/*
+  Función que se ejecuta para eliminar el alert en caso que el usuario no lo haya hecho
+*/
 const eliminarAlert = () => {
 
   //Eliminar el alert si existe en el dom antes de la próxima consulta
@@ -184,6 +194,10 @@ const eliminarAlert = () => {
 
 }
 
+/*
+  Función que se ejecuta para crear el alert en caso que el usuario 
+  quiera ver más registros de los que existen
+*/
 const excedeNumPag = () => {
 
   //Crear el alert en caso que no existan más registros, devuelve un valor booleano
@@ -198,6 +212,13 @@ const excedeNumPag = () => {
   }
 
 }
+
+/*
+  Crear y eliminar el div que contiene la tabla para estarla construyendo 
+  cada vez que se requiera y refrescar los datos:
+    - crearElementoTab
+    - eliminarElementoTab
+*/
 
 const crearElementoTab = () => {
 

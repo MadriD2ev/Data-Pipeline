@@ -2,12 +2,36 @@
 
 <div class="mt-5 mx-auto" style="width: 600px;">
   <div class="card">
-    <h5 class="card-header"><%= titulo %></h5>
+    <input type="text" id="getRegistros" style="display: none" value="<%= titulo %>">
+    <h5 class="card-header">Prueba Técnica</h5>
     <div class="card-body">
-      <h5 class="card-title">Arkon Data</h5>
-      <p class="card-text">¡Hola! Mi nombre es Madrid Gutiérrez Hernández.</p>
+      <h5 class="card-title">Data Pipeline</h5>
+      <p class="card-text">Metrobús CDMX</p>
+      <p class="fst-italic align-text-bottom text-end">Mi developer es Madrid</p>
     </div>
   </div>
 </div>
+
+<div id="alertSinRegistros">
+</div>
   
 <%- include("template/footer")%>
+
+<script>
+  //Obtener el valor del input que nos indicará si se consumieron las API's
+  const totalRegistros = document.getElementById("getRegistros").value
+
+  //Crear el alert en caso que no existan más registros, devuelve un valor booleano
+  let existe = !!document.getElementById("alertMostrado");
+
+  if(existe){
+
+    let alert = document.createElement('div')
+    alert.innerHTML = '<div id="alertMostrado" class="mt-5 mb-5 alert alert-primary alert-dismissible d-flex justify-content-center" role="alert">Algo ocurrió al intentar consultar los datos abiertos del metrobús o las alcaldías. Favor de verificar.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+    document.getElementById('alertSinRegistros').appendChild(alert)
+
+  }else {
+    document.getElementById("alertSinRegistros").remove()
+  }
+
+</script>
