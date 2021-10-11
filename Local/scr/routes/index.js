@@ -9,7 +9,7 @@ const port = 3000;
 let datos;
 let datosAlcaldias;
 //insercionBD Me indicara si se pudo consumir la API y que tenga información
-let insercionBD = '';
+let insercionBD = 0;
 let objAlcaldiaTotal = []; 
 let objAlcaldia = {};
 let coordAlcaldia;
@@ -18,19 +18,27 @@ let latitudAlcaldia = [];
 let latitudMetrobus = [];
 let valorAproximado = [];
 let ordenado;
-//let todosDatos= [];
+let apiConsumida = 0;
 
 
 
 //Consumir la api de CDMX - Metrobus
 request('https://datos.cdmx.gob.mx/api/3/action/datastore_search?resource_id=ad360a0e-b42f-482c-af12-1fd72140032e&limit=207', {json:true},(err,res,body) => {
-    if(err){console.log(err)}
+    
+    if(err){
 
-    //convertir el objeto JSON en un array para poder iterarlo
-    datos = body.result.records
+        insercionBD = 1
+        console.log("Error al consumir la API del metrobùs " + err)
 
-    if(datos.length == 0){
-        insercionBD = "No hay datos en la API del metrobús"
+    }else{
+
+        //convertir el objeto JSON en un array para poder iterarlo
+        datos = body.result.records
+        
+        if(datos.length == 0) {
+            insercionBD = 1  
+        }
+             
     }
 
 })
@@ -38,43 +46,46 @@ request('https://datos.cdmx.gob.mx/api/3/action/datastore_search?resource_id=ad3
 //Consumir la api de CDMX - Alcaldias
 request('https://datos.cdmx.gob.mx/api/3/action/datastore_search?resource_id=dbb00cee-3660-43f6-89c2-8beb433292a8&limit=16', {json:true},(err,res,body) => {
     
-    if(err){console.log(err)}
-
-    //convertir el objeto JSON en un array para poder iterarlo
-    datosAlcaldias = body.result.records
-
-    if(datosAlcaldias.length != 0) {
-        //Obtener la latitudes de las alcaldías
-        datosAlcaldias.map(x => {
-            coordAlcaldia = (x.geo_point_2d).split(',')
-            latitudAlcaldia.push(
-                parseFloat(coordAlcaldia[0])
-            )  
-        })
-        //Ordenar las latitudes de manera ascendente
-        ordenado = latitudAlcaldia.sort()
-        
-        //Obtener las alcaldías correspondientes del arreglo latitudAlcaldia
-        ordenado.map(x => {
-            datosAlcaldias.map(y => { 
-                coordAlcaldiaD = (y.geo_point_2d).split(',')
-                if(x == coordAlcaldiaD[0]){
-                    objAlcaldiaTotal.push([ 
-                        objAlcaldia["Latitud"]=parseFloat(parseFloat(coordAlcaldiaD[0]).toFixed(4)),
-                        objAlcaldia["NombreAlcaldia"]= y.nomgeo
-                    ]) 
-                }
-            })
-        })
-
-        //Alcaldías disponibles
-        //console.log(objAlcaldiaTotal)
-
-        datosInsertar()
-
+    if(err){
+        insercionBD = 1
+        console.log("Error al consumir la API de los lìmites de la alcaldìa " + err)
     }else{
-        insercionBD = "No hay datos en la API de Alcaldías" 
-    } 
+        //convertir el objeto JSON en un array para poder iterarlo
+        datosAlcaldias = body.result.records
+
+        if(datosAlcaldias.length != 0) {
+            //Obtener la latitudes de las alcaldías
+            datosAlcaldias.map(x => {
+                coordAlcaldia = (x.geo_point_2d).split(',')
+                latitudAlcaldia.push(
+                    parseFloat(coordAlcaldia[0])
+                )  
+            })
+            //Ordenar las latitudes de manera ascendente
+            ordenado = latitudAlcaldia.sort()
+            
+            //Obtener las alcaldías correspondientes del arreglo latitudAlcaldia
+            ordenado.map(x => {
+                datosAlcaldias.map(y => { 
+                    coordAlcaldiaD = (y.geo_point_2d).split(',')
+                    if(x == coordAlcaldiaD[0]){
+                        objAlcaldiaTotal.push([ 
+                            objAlcaldia["Latitud"]=parseFloat(parseFloat(coordAlcaldiaD[0]).toFixed(4)),
+                            objAlcaldia["NombreAlcaldia"]= y.nomgeo
+                        ]) 
+                    }
+                })
+            })
+
+            //Alcaldías disponibles
+            //console.log(objAlcaldiaTotal)
+
+            datosInsertar()
+
+        }else{
+            insercionBD = 1 
+        } 
+    }
 
 })
 
@@ -162,7 +173,6 @@ const insertarBD = async() => {
         query.forEach( async item => {
             //se insertan los datos en la BD
             let rows = await conn.query(item);
-            //console.log(rows)
         })
         
     } catch (error) {
@@ -175,9 +185,21 @@ const insertarBD = async() => {
 router.get('/', (req, res) => {
 
     //Ejecutar función
-    //insertarBD()
+    //insercionBD ? '' : insertarBD()
+    if(!insercionBD && apiConsumida == 0) {
+        apiConsumida = 1;
+        insertarBD()
+    }
+    
+    let consumidaAPI;
+    
+    if(insercionBD == 0){
+        consumidaAPI = 0
+    }else{
+        consumidaAPI = 1
+    }
 
-    res.render('raiz', {titulo: "Prueba Técnica"})
+    res.render('raiz', {titulo: consumidaAPI})
 })
 
 //Son las alcaldías disponibles

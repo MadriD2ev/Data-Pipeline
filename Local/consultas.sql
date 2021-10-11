@@ -1,6 +1,6 @@
 
 /* 
-    BD creada en MariaDB 
+    Ver las BD creadas
 */
 
 SHOW DATABASES; 
